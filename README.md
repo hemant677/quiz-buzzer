@@ -1,6 +1,17 @@
+---
+title: Intellibuzz
+emoji: 🎯
+colorFrom: dark-gray
+colorTo: black
+sdk: docker
+app_port: 7860
+pinned: false
+---
+
 # Quiz Buzzer
 
 > A real-time competitive quiz buzzer system built for live events — supporting up to 200 simultaneous participants with instant buzz ordering, live queue management, manual scoring, and a broadcast-quality public display.
+
 
 ---
 
