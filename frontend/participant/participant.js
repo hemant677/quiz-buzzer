@@ -27,6 +27,12 @@ const notificationBar = document.getElementById('notification-bar');
 const connectionBadge = document.getElementById('connection-badge');
 const connectionText = document.getElementById('connection-text');
 
+const countdownOverlay = document.getElementById('countdown-overlay');
+const countdownNumber = document.getElementById('countdown-number');
+const countdownLabel = document.getElementById('countdown-label');
+
+let countdownInterval = null;
+
 // ─── Socket Init ────────────────────────────────────────────────
 function initSocket() {
   appState.socket = io();
@@ -45,13 +51,57 @@ function initSocket() {
     appState.currentRound = round;
     appState.hasBuzzed = false;
     updateRoundUI(round);
-    enableBuzz();
     hidePositionCard();
-    showNotification('🚀 Round ' + round.roundNumber + ' has started! Get ready to BUZZ!', 'success');
     buzzRing.classList.remove('active');
+    
+    // Clear any previous countdowns
+    if (countdownInterval) clearInterval(countdownInterval);
+    countdownOverlay.classList.add('hidden');
+
+    disableBuzz();
+    startCountdown(() => {
+      enableBuzz();
+      showNotification('🚀 Round ' + round.roundNumber + ' has started! Get ready to BUZZ!', 'success');
+    });
   });
 
+  function startCountdown(callback) {
+    if (countdownInterval) clearInterval(countdownInterval);
+    countdownOverlay.classList.remove('hidden');
+    countdownLabel.textContent = 'GET READY';
+    
+    let count = 3;
+    countdownNumber.textContent = count;
+    
+    // Reset animation
+    countdownNumber.style.animation = 'none';
+    void countdownNumber.offsetWidth; // force reflow
+    countdownNumber.style.animation = 'num-pulse 1s cubic-bezier(0.4, 0, 0.2, 1) infinite';
+
+    countdownInterval = setInterval(() => {
+      count--;
+      if (count > 0) {
+        countdownNumber.textContent = count;
+      } else if (count === 0) {
+        countdownNumber.textContent = 'GO!';
+        countdownLabel.textContent = 'BUZZ NOW!';
+      } else {
+        clearInterval(countdownInterval);
+        countdownInterval = null;
+        countdownOverlay.classList.add('hidden');
+        countdownNumber.style.animation = 'none';
+        if (callback) callback();
+      }
+    }, 1000);
+  }
+
   appState.socket.on('roundEnded', ({ round }) => {
+    if (countdownInterval) {
+      clearInterval(countdownInterval);
+      countdownInterval = null;
+    }
+    countdownOverlay.classList.add('hidden');
+
     appState.currentRound = round || appState.currentRound;
     if (appState.currentRound) appState.currentRound.status = 'ENDED';
     disableBuzz();
@@ -61,6 +111,12 @@ function initSocket() {
   });
 
   appState.socket.on('roundReset', () => {
+    if (countdownInterval) {
+      clearInterval(countdownInterval);
+      countdownInterval = null;
+    }
+    countdownOverlay.classList.add('hidden');
+
     appState.hasBuzzed = false;
     hidePositionCard();
     enableBuzz();
@@ -132,6 +188,12 @@ function initSocket() {
   });
 
   appState.socket.on('eventCleared', () => {
+    if (countdownInterval) {
+      clearInterval(countdownInterval);
+      countdownInterval = null;
+    }
+    countdownOverlay.classList.add('hidden');
+
     appState.participant = null;
     appState.hasBuzzed = false;
     appState.myPosition = null;
