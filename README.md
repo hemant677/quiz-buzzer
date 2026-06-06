@@ -287,15 +287,47 @@ These are enforced server-side and cannot be bypassed by clients:
 
 ## Development
 
-Run with auto-restart using nodemon:
+Run with auto-restart using nodemon. You can run from the root directory or from the backend folder:
 
 ```bash
+# Option A: Run from root directory
+npm install
+npm run dev
+
+# Option B: Run from backend folder
 cd backend
+npm install
 npm run dev
 ```
+
+---
+
+## Deployment
+
+This project is configured with a root `package.json` for zero-config deployment. Since MongoDB Atlas is cloud-based, you only need to host the Node.js server.
+
+### Option 1 — Railway (Recommended)
+1. Sign up at [Railway](https://railway.app) using GitHub.
+2. Click **New Project** → **Deploy from GitHub repo**.
+3. Choose the `intellibuzz` (or `quiz-buzzer`) repository.
+4. Click **Variables** and add:
+   - `MONGO_URI`: Your MongoDB Atlas URI.
+   - `HOST_SECRET`: Your custom password for the host dashboard.
+5. Click **Deploy**. Under **Settings**, click **Generate Domain** to get your public URL.
+
+### Option 2 — Render
+1. Sign up at [Render](https://render.com).
+2. Click **New +** → **Web Service**.
+3. Connect your GitHub repository.
+4. Keep the default Build & Start Commands (they will run `npm install` and `npm start` at the root automatically).
+5. Add the following Environment Variables in the **Environment** tab:
+   - `MONGO_URI`: Your MongoDB Atlas connection string.
+   - `HOST_SECRET`: Your custom password for the host dashboard.
+6. Click **Deploy Web Service**.
 
 ---
 
 ## License
 
 MIT — free to use and modify for your events.
+
