@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quiz Buzzer – Participant</title>
+  <meta name="description" content="Register and buzz in real-time quiz events. See your queue position instantly." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="participant.css" />
+</head>
+<body>
+
+  <!-- Connection Status Badge -->
+  <div id="connection-badge" class="connection-badge disconnected">
+    <span class="dot"></span>
+    <span id="connection-text">Connecting…</span>
+  </div>
+
+  <!-- REGISTRATION SCREEN -->
+  <div id="register-screen" class="screen active">
+    <div class="card glass">
+      <div class="logo">🎯</div>
+      <h1>Quiz Buzzer</h1>
+      <p class="subtitle">Enter your name to join the event</p>
+      <form id="register-form">
+        <div class="input-group">
+          <label for="firstName">First Name</label>
+          <input type="text" id="firstName" placeholder="e.g. Rahul" autocomplete="given-name" required />
+        </div>
+        <div class="input-group">
+          <label for="lastName">Last Name</label>
+          <input type="text" id="lastName" placeholder="e.g. Sharma" autocomplete="family-name" required />
+        </div>
+        <button type="submit" class="btn btn-primary" id="register-btn">
+          <span>Join Event</span>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </button>
+      </form>
+      <div id="register-error" class="error-msg hidden"></div>
+    </div>
+  </div>
+
+  <!-- BUZZER SCREEN -->
+  <div id="buzzer-screen" class="screen hidden">
+    <div class="buzzer-layout">
+
+      <!-- Top Info Bar -->
+      <div class="info-bar glass">
+        <div class="info-item">
+          <span class="info-label">You are</span>
+          <span class="info-value" id="display-name">—</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Round</span>
+          <span class="info-value" id="round-display">—</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Status</span>
+          <span class="badge" id="round-status-badge">Waiting</span>
+        </div>
+      </div>
+
+      <!-- BUZZ Button -->
+      <div class="buzz-container">
+        <div class="buzz-ring" id="buzz-ring"></div>
+        <button id="buzz-btn" class="buzz-btn" disabled>
+          <span class="buzz-label">BUZZ</span>
+        </button>
+      </div>
+
+      <!-- Queue Position -->
+      <div id="position-card" class="position-card glass hidden">
+        <div class="position-icon">🔔</div>
+        <div class="position-text" id="position-text">You are in the queue</div>
+        <div class="position-number" id="position-number">#1</div>
+      </div>
+
+      <!-- Round Notification -->
+      <div id="notification-bar" class="notification-bar hidden"></div>
+
+    </div>
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="participant.js"></script>
+</body>
+</html>

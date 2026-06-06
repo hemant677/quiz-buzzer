@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quiz Buzzer – Live Display</title>
+  <meta name="description" content="Public leaderboard and live round display for the quiz buzzer event." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;900&family=Inter:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="display.css" />
+</head>
+<body>
+
+  <!-- Animated Background -->
+  <div class="bg-orb orb1"></div>
+  <div class="bg-orb orb2"></div>
+  <div class="bg-orb orb3"></div>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="header-left">
+      <span class="logo">🎯</span>
+      <div>
+        <h1>Quiz Buzzer</h1>
+        <p class="tagline">Live Event Display</p>
+      </div>
+    </div>
+    <div class="header-right">
+      <div class="round-pill" id="round-pill">Waiting for round…</div>
+      <div id="round-status-badge" class="status-badge waiting">WAITING</div>
+    </div>
+  </header>
+
+  <!-- Main Grid -->
+  <main class="main-grid">
+
+    <!-- Current Queue -->
+    <section class="current-section glass">
+      <div class="section-label">🎤 On the Mic</div>
+      <div id="current-participant" class="current-name">—</div>
+      <div id="current-subtitle" class="current-subtitle">Waiting for round to start</div>
+    </section>
+
+    <!-- Leaderboard -->
+    <section class="leaderboard-section glass">
+      <div class="lb-header">
+        <span class="section-label">🏆 Leaderboard</span>
+        <span id="scores-hidden-notice" class="hidden-notice hidden">Scores Hidden</span>
+      </div>
+      <div id="leaderboard-body" class="leaderboard-body">
+        <div class="waiting-msg">Waiting for participants…</div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Bottom Ticker -->
+  <div class="ticker glass">
+    <div class="ticker-label">LIVE</div>
+    <div id="ticker-content" class="ticker-content">🎯 Welcome to Quiz Buzzer – Connecting to server…</div>
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="display.js"></script>
+</body>
+</html>
