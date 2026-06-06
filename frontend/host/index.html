@@ -3,254 +3,254 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Quiz Buzzer – Host Dashboard</title>
+  <title>Quiz Buzzer – Host</title>
   <meta name="description" content="Host control panel for the real-time quiz buzzer system." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=Barlow+Condensed:wght@700;900&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="host.css" />
 </head>
 <body>
 
-  <!-- LOGIN OVERLAY -->
+  <!-- ── LOGIN ─────────────────────────────── -->
   <div id="login-overlay" class="overlay active">
-    <div class="login-card glass">
-      <div class="logo">🎯</div>
-      <h1>Host Dashboard</h1>
-      <p class="subtitle">Enter your host password to continue</p>
-      <div class="input-group">
-        <label for="host-password">Host Password</label>
-        <input type="password" id="host-password" placeholder="Enter password…" />
+    <div class="login-box">
+      <div class="login-brand">QUIZ BUZZER</div>
+      <h1>Host Access</h1>
+      <p class="login-sub">Enter your password to control this event</p>
+      <div class="field">
+        <label for="host-password">Password</label>
+        <input type="password" id="host-password" placeholder="Host password" />
       </div>
-      <button id="login-btn" class="btn btn-cyan">Login as Host</button>
-      <div id="login-error" class="error-msg hidden">Incorrect password. Try again.</div>
+      <button id="login-btn" class="btn btn-white">Sign In</button>
+      <div id="login-error" class="field-error hidden">Incorrect password. Try again.</div>
     </div>
   </div>
 
-  <!-- MAIN DASHBOARD -->
+  <!-- ── DASHBOARD ──────────────────────────── -->
   <div id="dashboard" class="dashboard hidden">
 
     <!-- Sidebar -->
-    <aside class="sidebar glass">
-      <div class="sidebar-header">
-        <span class="logo-sm">🎯</span>
-        <span class="brand">QuizBuzzer</span>
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <span class="brand-icon">◈</span>
+        <span class="brand-name">QuizBuzzer</span>
       </div>
 
       <nav class="sidebar-nav">
         <button class="nav-btn active" data-panel="round-panel" id="nav-round">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
           Round
         </button>
         <button class="nav-btn" data-panel="queue-panel" id="nav-queue">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><circle cx="3" cy="6" r="1" fill="currentColor"/><circle cx="3" cy="12" r="1" fill="currentColor"/><circle cx="3" cy="18" r="1" fill="currentColor"/></svg>
           Queue
         </button>
         <button class="nav-btn" data-panel="score-panel" id="nav-score">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
           Scores
         </button>
         <button class="nav-btn" data-panel="participants-panel" id="nav-participants">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
           Players
         </button>
         <button class="nav-btn" data-panel="leaderboard-panel" id="nav-leaderboard">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-          Leaderboard
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          Standings
         </button>
       </nav>
 
       <div class="sidebar-footer">
         <div id="conn-indicator" class="conn-indicator disconnected">
           <span class="dot"></span>
-          <span id="conn-text">Connecting…</span>
+          <span id="conn-text">Connecting</span>
         </div>
-        <div class="round-info-sm">
-          <span id="round-badge-sm" class="status-pill waiting">No Round</span>
-        </div>
+        <div id="round-badge-sm" class="status-pill waiting">No Round</div>
       </div>
     </aside>
 
-    <!-- Main Content -->
-    <main class="main-content">
+    <!-- Main -->
+    <main class="main">
 
-      <!-- ── ROUND PANEL ────────────────────── -->
+      <!-- ── ROUND PANEL ──────────────────── -->
       <section id="round-panel" class="panel active">
-        <div class="panel-header">
-          <h2>Round Control</h2>
+        <div class="panel-head">
+          <div>
+            <h2>Round Control</h2>
+            <p class="panel-sub">Start, end, or reset the current round</p>
+          </div>
           <div id="round-status-display" class="status-pill waiting">WAITING</div>
         </div>
 
-        <div class="round-meta glass-card">
-          <div class="meta-item">
-            <span class="meta-label">Current Round</span>
-            <span class="meta-value" id="current-round-num">—</span>
+        <div class="stat-row">
+          <div class="stat-card">
+            <span class="stat-label">Round</span>
+            <span class="stat-val" id="current-round-num">—</span>
           </div>
-          <div class="meta-item">
-            <span class="meta-label">Queue Size</span>
-            <span class="meta-value" id="queue-size">0</span>
+          <div class="stat-card">
+            <span class="stat-label">Queue</span>
+            <span class="stat-val" id="queue-size">0</span>
           </div>
-          <div class="meta-item">
-            <span class="meta-label">Started At</span>
-            <span class="meta-value" id="round-started-at">—</span>
+          <div class="stat-card">
+            <span class="stat-label">Started</span>
+            <span class="stat-val" id="round-started-at">—</span>
           </div>
         </div>
 
-        <div class="button-row">
+        <div class="action-row">
           <button id="btn-start-round" class="btn btn-green">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
             Start Round
           </button>
           <button id="btn-end-round" class="btn btn-red" disabled>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><rect x="4" y="4" width="16" height="16" rx="2"/></svg>
             End Round
           </button>
-          <button id="btn-reset-round" class="btn btn-yellow" disabled>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
-            Reset Round
+          <button id="btn-reset-round" class="btn btn-ghost" disabled>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+            Reset Queue
           </button>
         </div>
 
-        <!-- Activity Log -->
-        <div class="section-title">Recent Activity</div>
-        <div id="activity-log" class="activity-log glass-card">
-          <p class="empty-state">No activity yet…</p>
+        <div class="section-label">Activity</div>
+        <div id="activity-log" class="activity-log card">
+          <p class="empty">No activity yet</p>
         </div>
       </section>
 
-      <!-- ── QUEUE PANEL ────────────────────── -->
+      <!-- ── QUEUE PANEL ──────────────────── -->
       <section id="queue-panel" class="panel hidden">
-        <div class="panel-header">
-          <h2>Live Queue</h2>
-          <span class="badge-count" id="queue-count-badge">0 in queue</span>
+        <div class="panel-head">
+          <div>
+            <h2>Live Queue</h2>
+            <p class="panel-sub">Manage who answers next</p>
+          </div>
+          <span class="chip" id="queue-count-badge">0 in queue</span>
         </div>
 
-        <!-- Current Participant -->
-        <div class="queue-spotlight glass-card" id="current-spotlight">
-          <div class="spotlight-label">🎤 Current</div>
-          <div class="spotlight-name" id="current-name">No one yet</div>
-          <div class="action-buttons-row">
+        <!-- Current -->
+        <div id="current-spotlight" class="current-card card">
+          <div class="current-label">NOW ANSWERING</div>
+          <div class="current-name" id="current-name">—</div>
+          <div class="current-actions">
             <button id="btn-correct" class="btn btn-green btn-sm" disabled>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
               Correct
             </button>
             <button id="btn-wrong" class="btn btn-red btn-sm" disabled>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
               Wrong
             </button>
-            <button id="btn-pass" class="btn btn-yellow btn-sm" disabled>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+            <button id="btn-pass" class="btn btn-ghost btn-sm" disabled>
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
               Pass
             </button>
           </div>
         </div>
 
-        <!-- Next Participant -->
-        <div class="queue-next glass-card" id="next-card">
-          <div class="next-label">⏭️ Up Next</div>
-          <div class="next-name" id="next-name">—</div>
+        <!-- Next -->
+        <div id="next-card" class="next-card card">
+          <span class="next-label">UP NEXT</span>
+          <span class="next-name" id="next-name">—</span>
         </div>
 
-        <!-- Remaining Queue -->
-        <div class="section-title">Remaining Queue</div>
-        <div id="remaining-list" class="remaining-list glass-card">
-          <p class="empty-state">Queue is empty</p>
+        <div class="section-label">Remaining</div>
+        <div id="remaining-list" class="remaining-list card">
+          <p class="empty">Queue is empty</p>
         </div>
       </section>
 
-      <!-- ── SCORE PANEL ─────────────────────── -->
+      <!-- ── SCORE PANEL ──────────────────── -->
       <section id="score-panel" class="panel hidden">
-        <div class="panel-header">
-          <h2>Score Management</h2>
+        <div class="panel-head">
+          <div>
+            <h2>Score Management</h2>
+            <p class="panel-sub">Award, deduct, and manage points</p>
+          </div>
           <button id="btn-undo" class="btn btn-ghost btn-sm" disabled>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 14 4 9 9 4"/><path d="M20 20v-7a4 4 0 0 0-4-4H4"/></svg>
-            Undo Last
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 14 4 9 9 4"/><path d="M20 20v-7a4 4 0 0 0-4-4H4"/></svg>
+            Undo
           </button>
         </div>
 
-        <!-- Participant Selector -->
-        <div class="glass-card">
+        <div class="card">
           <label class="field-label">Select Participant</label>
-          <select id="score-participant-select" class="select-input">
+          <select id="score-participant-select" class="select">
             <option value="">— Choose participant —</option>
           </select>
         </div>
 
-        <!-- Quick Award -->
-        <div class="section-title">Award Points</div>
-        <div class="score-buttons glass-card">
+        <div class="section-label">Award Points</div>
+        <div class="score-grid card">
           <button class="btn btn-green btn-score" data-points="5">+5</button>
           <button class="btn btn-green btn-score" data-points="10">+10</button>
           <button class="btn btn-green btn-score" data-points="20">+20</button>
           <button class="btn btn-green btn-score" data-points="50">+50</button>
         </div>
 
-        <!-- Custom Award -->
-        <div class="custom-score-row glass-card">
-          <div class="input-inline">
-            <input type="number" id="custom-score-input" placeholder="Custom points…" min="1" />
-            <input type="text" id="custom-reason-input" placeholder="Reason (optional)" />
+        <div class="card custom-block">
+          <div class="inline-fields">
+            <input type="number" id="custom-score-input" placeholder="Points…" min="1" class="input-sm" />
+            <input type="text" id="custom-reason-input" placeholder="Reason (optional)" class="input-sm" />
           </div>
-          <div class="button-row-sm">
-            <button id="btn-award-custom" class="btn btn-green">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-              Award
-            </button>
-            <button id="btn-deduct-custom" class="btn btn-red">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/></svg>
-              Deduct
-            </button>
+          <div class="btn-pair">
+            <button id="btn-award-custom" class="btn btn-green">Award</button>
+            <button id="btn-deduct-custom" class="btn btn-red">Deduct</button>
           </div>
         </div>
 
-        <!-- Eliminate / Restore -->
-        <div class="section-title">Participant Control</div>
-        <div class="elim-row glass-card">
+        <div class="section-label">Participant Control</div>
+        <div class="card btn-pair">
           <button id="btn-eliminate" class="btn btn-red">⛔ Eliminate</button>
-          <button id="btn-restore" class="btn btn-cyan">✅ Restore</button>
+          <button id="btn-restore" class="btn btn-white">Restore</button>
         </div>
 
-        <!-- Score Log -->
-        <div class="section-title">Score Log <span id="score-log-count" class="badge-count"></span></div>
-        <div id="score-log-list" class="score-log-list glass-card">
-          <p class="empty-state">No score changes yet…</p>
+        <div class="section-label">Score Log <span id="score-log-count" class="chip"></span></div>
+        <div id="score-log-list" class="score-log card">
+          <p class="empty">No score changes yet</p>
         </div>
       </section>
 
-      <!-- ── PARTICIPANTS PANEL ──────────────── -->
+      <!-- ── PLAYERS PANEL ─────────────────── -->
       <section id="participants-panel" class="panel hidden">
-        <div class="panel-header">
-          <h2>All Participants</h2>
-          <span class="badge-count" id="total-participants-badge">0 registered</span>
+        <div class="panel-head">
+          <div>
+            <h2>All Players</h2>
+            <p class="panel-sub">Registered participants</p>
+          </div>
+          <span class="chip" id="total-participants-badge">0 registered</span>
         </div>
-        <div id="participants-list" class="participants-list glass-card">
-          <p class="empty-state">No participants yet…</p>
+        <div id="participants-list" class="participants-list card">
+          <p class="empty">No participants yet</p>
         </div>
       </section>
 
-      <!-- ── LEADERBOARD PANEL ───────────────── -->
+      <!-- ── LEADERBOARD PANEL ──────────────── -->
       <section id="leaderboard-panel" class="panel hidden">
-        <div class="panel-header">
-          <h2>Leaderboard</h2>
-          <div class="toggle-row">
-            <span>Show Scores</span>
+        <div class="panel-head">
+          <div>
+            <h2>Standings</h2>
+            <p class="panel-sub">Live leaderboard</p>
+          </div>
+          <div class="toggle-wrap">
+            <span class="toggle-lbl">Show Scores</span>
             <label class="toggle">
               <input type="checkbox" id="scores-toggle" checked />
-              <span class="toggle-slider"></span>
+              <span class="toggle-track"></span>
             </label>
           </div>
         </div>
-        <div id="leaderboard-table-container" class="glass-card">
+        <div class="card table-wrap">
           <table class="leaderboard-table">
             <thead>
               <tr>
-                <th>#</th>
+                <th>Rank</th>
                 <th>Participant</th>
                 <th>Points</th>
                 <th>Status</th>
               </tr>
             </thead>
             <tbody id="leaderboard-tbody">
-              <tr><td colspan="4" class="empty-state">No data yet…</td></tr>
+              <tr><td colspan="4" class="empty">No data yet</td></tr>
             </tbody>
           </table>
         </div>
@@ -259,7 +259,7 @@
     </main>
   </div>
 
-  <!-- Toast Notification -->
+  <!-- Toast -->
   <div id="toast" class="toast hidden"></div>
 
   <script src="/socket.io/socket.io.js"></script>

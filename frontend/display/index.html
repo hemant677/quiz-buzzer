@@ -4,61 +4,64 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Quiz Buzzer – Live Display</title>
-  <meta name="description" content="Public leaderboard and live round display for the quiz buzzer event." />
+  <meta name="description" content="Live public leaderboard for the quiz buzzer event." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;900&family=Inter:wght@400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Barlow+Condensed:ital,wght@0,600;0,700;0,900;1,700&family=Inter:wght@400;500&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="display.css" />
 </head>
 <body>
 
-  <!-- Animated Background -->
-  <div class="bg-orb orb1"></div>
-  <div class="bg-orb orb2"></div>
-  <div class="bg-orb orb3"></div>
-
-  <!-- Header -->
-  <header class="header">
-    <div class="header-left">
-      <span class="logo">🎯</span>
-      <div>
-        <h1>Quiz Buzzer</h1>
-        <p class="tagline">Live Event Display</p>
+  <!-- ── BROADCAST HEADER ──────────────────── -->
+  <header class="broadcast-header">
+    <div class="bh-left">
+      <div class="bh-logo">◈</div>
+      <div class="bh-title">QUIZ BUZZER</div>
+      <div class="live-badge">
+        <span class="live-dot"></span>
+        LIVE
       </div>
     </div>
-    <div class="header-right">
-      <div class="round-pill" id="round-pill">Waiting for round…</div>
-      <div id="round-status-badge" class="status-badge waiting">WAITING</div>
+    <div class="bh-center" id="round-pill">WAITING FOR ROUND</div>
+    <div class="bh-right">
+      <div id="round-status-badge" class="status-tag waiting">WAITING</div>
     </div>
   </header>
 
-  <!-- Main Grid -->
-  <main class="main-grid">
+  <!-- ── MAIN BROADCAST AREA ───────────────── -->
+  <main class="broadcast-main">
 
-    <!-- Current Queue -->
-    <section class="current-section glass">
-      <div class="section-label">🎤 On the Mic</div>
-      <div id="current-participant" class="current-name">—</div>
-      <div id="current-subtitle" class="current-subtitle">Waiting for round to start</div>
+    <!-- Left: Now Answering -->
+    <section class="answering-section">
+      <div class="answering-label">NOW ANSWERING</div>
+      <div class="answering-name" id="current-participant">—</div>
+      <div class="answering-sub" id="current-subtitle">Waiting for round to begin</div>
+      <div class="answering-bar"></div>
     </section>
 
-    <!-- Leaderboard -->
-    <section class="leaderboard-section glass">
-      <div class="lb-header">
-        <span class="section-label">🏆 Leaderboard</span>
-        <span id="scores-hidden-notice" class="hidden-notice hidden">Scores Hidden</span>
+    <!-- Divider -->
+    <div class="broadcast-divider"></div>
+
+    <!-- Right: Standings -->
+    <section class="standings-section">
+      <div class="standings-header">
+        <div class="standings-title">STANDINGS</div>
+        <div id="scores-hidden-notice" class="hidden-tag hidden">SCORES HIDDEN</div>
       </div>
-      <div id="leaderboard-body" class="leaderboard-body">
+      <div id="leaderboard-body" class="standings-body">
         <div class="waiting-msg">Waiting for participants…</div>
       </div>
     </section>
 
   </main>
 
-  <!-- Bottom Ticker -->
-  <div class="ticker glass">
-    <div class="ticker-label">LIVE</div>
-    <div id="ticker-content" class="ticker-content">🎯 Welcome to Quiz Buzzer – Connecting to server…</div>
-  </div>
+  <!-- ── TICKER ────────────────────────────── -->
+  <footer class="broadcast-ticker">
+    <div class="ticker-live">
+      <span class="ticker-dot"></span>
+      LIVE
+    </div>
+    <div id="ticker-content" class="ticker-text">Welcome to Quiz Buzzer — Connecting to server…</div>
+  </footer>
 
   <script src="/socket.io/socket.io.js"></script>
   <script src="display.js"></script>
