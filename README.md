@@ -325,9 +325,37 @@ This project is configured with a root `package.json` for zero-config deployment
    - `HOST_SECRET`: Your custom password for the host dashboard.
 6. Click **Deploy Web Service**.
 
+### Option 3 — Hugging Face Spaces (Free Docker Hosting)
+Since Hugging Face Spaces supports custom Docker environments, you can host Intellibuzz there using our pre-configured `Dockerfile`:
+
+1. Sign up/Log in at [Hugging Face](https://huggingface.co/).
+2. Click your profile picture (top right) → **New Space**.
+3. Configure the Space:
+   - **Space name**: `intellibuzz` (or your choice)
+   - **License**: `mit`
+   - **SDK**: Select **Docker** 🐳
+   - **Docker template**: Select **Blank** (it will read our custom `Dockerfile` automatically)
+   - **Space hardware**: **CPU basic** (Free tier)
+   - **Visibility**: **Public** (required for participants to connect)
+   - Click **Create Space**.
+4. Set Environment Secrets:
+   - In your new Space, click the **Settings** tab.
+   - Scroll to **Variables and secrets**.
+   - Under **Secrets**, click **New secret** to add:
+     - Name: `MONGO_URI` (your MongoDB Atlas connection string)
+     - Name: `HOST_SECRET` (your host dashboard password)
+5. Push to Hugging Face Git:
+   - In your local command line, run:
+     ```bash
+     git remote add hf https://huggingface.co/spaces/YOUR_HF_USERNAME/YOUR_SPACE_NAME
+     git push -f hf main
+     ```
+   - Hugging Face will automatically build the Docker image and start the server!
+
 ---
 
 ## License
 
 MIT — free to use and modify for your events.
+
 
