@@ -111,6 +111,14 @@
           </button>
         </div>
 
+        <div class="section-label">Session Control</div>
+        <div class="card" style="margin-bottom: 0.5rem; display: flex; flex-direction: column; gap: 0.75rem;">
+          <p style="font-size: 0.75rem; color: var(--text-2); line-height: 1.4;">
+            Start a fresh event session. This will permanently delete all participants, scores, rounds, and logs.
+          </p>
+          <button id="btn-clear-session" class="btn btn-red btn-sm" style="width: 100%;">Clear All Event Data</button>
+        </div>
+
         <div class="section-label">Activity</div>
         <div id="activity-log" class="activity-log card">
           <p class="empty">No activity yet</p>
@@ -200,8 +208,9 @@
 
         <div class="section-label">Participant Control</div>
         <div class="card btn-pair">
-          <button id="btn-eliminate" class="btn btn-red">⛔ Eliminate</button>
-          <button id="btn-restore" class="btn btn-white">Restore</button>
+          <button id="btn-eliminate" class="btn btn-ghost btn-sm">⛔ Eliminate</button>
+          <button id="btn-restore" class="btn btn-ghost btn-sm">Restore</button>
+          <button id="btn-delete-player" class="btn btn-red btn-sm">❌ Remove</button>
         </div>
 
         <div class="section-label">Score Log <span id="score-log-count" class="chip"></span></div>

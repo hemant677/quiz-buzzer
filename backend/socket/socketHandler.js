@@ -465,6 +465,62 @@ function socketHandler(io) {
       }
     });
 
+    // ── DELETE PARTICIPANT ───────────────────
+    socket.on('deleteParticipant', async ({ participantId }) => {
+      if (!isHost(socket)) return;
+      try {
+        const participant = await Participant.findByIdAndDelete(participantId);
+        if (!participant) return socket.emit('error', { message: 'Participant not found.' });
+
+        // Clean up from queue and buzzed list
+        state.queue = state.queue.filter(id => id !== participantId);
+        state.buzzedInRound.delete(participantId);
+
+        // Delete their related records
+        await Promise.all([
+          Buzz.deleteMany({ participantId }),
+          ScoreLog.deleteMany({ participantId }),
+          QueueLog.deleteMany({ participantId })
+        ]);
+
+        io.emit('participantDeleted', { participantId });
+        await broadcastQueue(io);
+        await broadcastLeaderboard(io);
+        console.log(`[ACTION] Deleted participant: ${participant.firstName} ${participant.lastName}`);
+      } catch (err) {
+        console.error('[ACTION] Delete participant error:', err);
+        socket.emit('error', { message: err.message });
+      }
+    });
+
+    // ── CLEAR EVENT SESSION ──────────────────
+    socket.on('clearEventSession', async () => {
+      if (!isHost(socket)) return;
+      try {
+        // Clear all collections
+        await Promise.all([
+          Participant.deleteMany({}),
+          Round.deleteMany({}),
+          Buzz.deleteMany({}),
+          ScoreLog.deleteMany({}),
+          QueueLog.deleteMany({})
+        ]);
+
+        // Reset memory state
+        state.currentRound = null;
+        resetRoundState();
+
+        io.emit('eventCleared');
+        io.emit('roundReset', { round: null });
+        await broadcastQueue(io);
+        await broadcastLeaderboard(io);
+        console.log('[ACTION] Event session cleared by host');
+      } catch (err) {
+        console.error('[ACTION] Clear event session error:', err);
+        socket.emit('error', { message: err.message });
+      }
+    });
+
     // ── TOGGLE HIDE SCORES ───────────────────
     socket.on('toggleHideScores', ({ hidden }) => {
       if (!isHost(socket)) return;

@@ -67,6 +67,8 @@ const btnDeductCustom = document.getElementById('btn-deduct-custom');
 const btnUndo = document.getElementById('btn-undo');
 const btnEliminate = document.getElementById('btn-eliminate');
 const btnRestore = document.getElementById('btn-restore');
+const btnDeletePlayer = document.getElementById('btn-delete-player');
+const btnClearSession = document.getElementById('btn-clear-session');
 const scoreLogList = document.getElementById('score-log-list');
 const scoreLogCount = document.getElementById('score-log-count');
 
@@ -157,6 +159,37 @@ function initSocket() {
   state.socket.on('participantRestored', ({ participant }) => {
     addActivity(`✅ ${participant.firstName} ${participant.lastName} restored`, 'success');
     showToast(`${participant.firstName} ${participant.lastName} restored`, 'success');
+  });
+
+  state.socket.on('participantDeleted', ({ participantId }) => {
+    state.participants = state.participants.filter(p => p._id !== participantId);
+    state.leaderboard = state.leaderboard.filter(p => p._id !== participantId);
+    state.queue = state.queue.filter(id => id !== participantId);
+    if (scoreParticipantSelect.value === participantId) {
+      scoreParticipantSelect.value = '';
+    }
+    renderParticipants();
+    renderScoreParticipantSelect();
+    renderLeaderboard();
+    addActivity('❌ Participant registration removed', 'danger');
+    showToast('Participant removed', 'warning');
+  });
+
+  state.socket.on('eventCleared', () => {
+    state.participants = [];
+    state.leaderboard = [];
+    state.queue = [];
+    state.queueDetails = { current: null, next: null, remaining: [] };
+    state.currentRound = null;
+    state.actionHistory = [];
+    scoreParticipantSelect.value = '';
+    renderParticipants();
+    renderScoreParticipantSelect();
+    renderLeaderboard();
+    renderQueue();
+    updateRoundUI();
+    addActivity('🚨 Event session cleared', 'danger');
+    showToast('All event data cleared', 'error');
   });
 
   state.socket.on('participantJoined', ({ participant }) => {
@@ -297,6 +330,26 @@ btnRestore.addEventListener('click', () => {
   const participantId = scoreParticipantSelect.value;
   if (!participantId) return showToast('Select a participant first', 'warning');
   state.socket.emit('restoreParticipant', { participantId });
+});
+
+btnDeletePlayer.addEventListener('click', () => {
+  const participantId = scoreParticipantSelect.value;
+  if (!participantId) return showToast('Select a participant first', 'warning');
+  const selectedText = scoreParticipantSelect.options[scoreParticipantSelect.selectedIndex].text;
+  if (confirm(`⚠️ Permanently delete player "${selectedText}"?\nThis will remove all their score logs, buzzes, and queue records. This CANNOT be undone.`)) {
+    state.socket.emit('deleteParticipant', { participantId });
+  }
+});
+
+btnClearSession.addEventListener('click', () => {
+  if (confirm('🚨 DANGER: Clear all event data?\nThis will permanently delete all registered players, round logs, scores, and buzzes.\nThis action is irreversible.')) {
+    const confirmText = prompt('Type "RESET" to confirm this action:');
+    if (confirmText === 'RESET') {
+      state.socket.emit('clearEventSession');
+    } else {
+      showToast('Reset cancelled', 'info');
+    }
+  }
 });
 
 // ─── Hide/Show Scores Toggle ────────────────────────────────────

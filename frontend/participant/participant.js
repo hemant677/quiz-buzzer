@@ -112,6 +112,42 @@ function initSocket() {
     }
   });
 
+  appState.socket.on('participantDeleted', ({ participantId }) => {
+    if (appState.participant && appState.participant._id === participantId) {
+      appState.participant = null;
+      appState.hasBuzzed = false;
+      appState.myPosition = null;
+      hidePositionCard();
+      buzzRing.classList.remove('active');
+      
+      // Kick back to registration
+      buzzerScreen.classList.remove('active');
+      buzzerScreen.classList.add('hidden');
+      registerScreen.classList.remove('hidden');
+      registerScreen.classList.add('active');
+      registerBtn.disabled = false;
+      registerBtn.querySelector('span').textContent = 'Join Event';
+      showNotification('⚠️ Your registration was removed by the host.', 'warning');
+    }
+  });
+
+  appState.socket.on('eventCleared', () => {
+    appState.participant = null;
+    appState.hasBuzzed = false;
+    appState.myPosition = null;
+    hidePositionCard();
+    buzzRing.classList.remove('active');
+    
+    // Kick back to registration
+    buzzerScreen.classList.remove('active');
+    buzzerScreen.classList.add('hidden');
+    registerScreen.classList.remove('hidden');
+    registerScreen.classList.add('active');
+    registerBtn.disabled = false;
+    registerBtn.querySelector('span').textContent = 'Join Event';
+    showNotification('🔄 The event session was reset by the host.', 'info');
+  });
+
   appState.socket.on('error', ({ message }) => {
     showNotification('⚠️ ' + message, 'danger');
   });
