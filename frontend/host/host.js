@@ -2,6 +2,7 @@
 const state = {
   socket: null,
   authenticated: false,
+  hostSecret: null, // In-memory fallback if localStorage is blocked by iframe security
   currentRound: null,
   queue: [],
   queueDetails: { current: null, next: null, remaining: [] },
@@ -11,6 +12,23 @@ const state = {
   actionHistory: [],
   scoreLogs: []
 };
+
+function getStoredSecret() {
+  try {
+    return localStorage.getItem('hostSecret');
+  } catch (e) {
+    return null;
+  }
+}
+
+function setStoredSecret(secret) {
+  try {
+    localStorage.setItem('hostSecret', secret);
+  } catch (e) {
+    // Ignore block in sandboxed iframe
+  }
+}
+
 
 // ─── DOM ────────────────────────────────────────────────────────
 const loginOverlay = document.getElementById('login-overlay');
@@ -70,12 +88,14 @@ function initSocket() {
 
   state.socket.on('connect', () => {
     setConnected(true);
-    if (state.authenticated) {
-      state.socket.emit('hostAuth', { secret: localStorage.getItem('hostSecret') });
+    const secret = state.hostSecret || getStoredSecret();
+    if (secret) {
+      state.socket.emit('hostAuth', { secret });
     }
   });
 
   state.socket.on('disconnect', () => setConnected(false));
+
 
   state.socket.on('hostAuthSuccess', () => {
     state.authenticated = true;
@@ -177,7 +197,8 @@ loginBtn.addEventListener('click', () => {
   loginBtn.disabled = true;
   loginBtn.textContent = 'Verifying…';
   loginError.classList.add('hidden');
-  localStorage.setItem('hostSecret', secret);
+  setStoredSecret(secret);
+  state.hostSecret = secret; // Save in memory
   state.socket.emit('hostAuth', { secret });
   // Re-enable after 2s if no response
   setTimeout(() => {
