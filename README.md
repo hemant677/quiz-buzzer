@@ -1,38 +1,89 @@
-# 🎯 Real-Time Quiz Buzzer System
+# Quiz Buzzer
 
-A fast, reliable, real-time quiz buzzer web application built for live events with up to **200 participants**. Features instant buzz ordering, live queue management, manual scoring, and a public leaderboard display — all powered by Socket.IO.
-
----
-
-## 🖥️ Screenshots & Screens
-
-| Screen | Purpose |
-|---|---|
-| `/participant` | Each contestant registers and buzzes in |
-| `/host` | Quiz master control panel (protected by password) |
-| `/display` | Public leaderboard projected for the audience |
+> A real-time competitive quiz buzzer system built for live events — supporting up to 200 simultaneous participants with instant buzz ordering, live queue management, manual scoring, and a broadcast-quality public display.
 
 ---
 
-## ⚙️ Tech Stack
+## Overview
+
+Quiz Buzzer is a full-stack web application that runs entirely on your local network. Three separate browser screens serve three distinct roles: participants buzz in from their phones, the host controls the event from a dashboard, and the audience watches a live leaderboard on a projected display.
+
+All real-time communication runs over Socket.IO. Every buzz is timestamped server-side to guarantee fair ordering. No client time is ever trusted.
+
+---
+
+## Screens
+
+### Participant — `/participant`
+Where contestants join and compete.
+
+- Register with first and last name
+- Large BUZZ button activates when a round starts
+- Shows live queue position after buzzing
+- Connection status indicator
+- Mobile-first, works on any device
+
+### Host Dashboard — `/host`
+The event control center. Password-protected.
+
+- **Round Panel** — Start, end, or reset rounds
+- **Queue Panel** — See who's current, next, and remaining. Mark correct, wrong, or pass
+- **Score Panel** — Award +5, +10, +20, +50, or a custom amount. Deduct points. Undo the last score action
+- **Players Panel** — View all registered participants and their status
+- **Standings Panel** — Live leaderboard with show/hide score toggle
+
+### Display — `/display`
+A broadcast-quality screen designed for projectors and LED walls.
+
+- Esports tournament overlay aesthetic
+- Large "NOW ANSWERING" spotlight with the current player's name
+- Live standings board with gold, silver, bronze rank accents
+- Animated live ticker at the bottom
+- Scores can be hidden by the host in real time
+
+---
+
+## Tech Stack
 
 | Layer | Technology |
 |---|---|
-| **Backend** | Node.js, Express.js |
-| **Real-time** | Socket.IO |
-| **Database** | MongoDB (Atlas or Local) |
-| **Frontend** | HTML, CSS, Vanilla JavaScript |
-| **Fonts** | Google Fonts – Outfit + Inter |
+| Runtime | Node.js |
+| Server | Express.js |
+| Real-time | Socket.IO |
+| Database | MongoDB (Atlas or Local) |
+| Frontend | HTML · CSS · Vanilla JavaScript |
+| Fonts | Space Grotesk · Barlow Condensed · Inter |
 
 ---
 
-## 📁 Folder Structure
+## Design System
+
+The interface uses a unified premium dark theme across all three screens.
+
+| Token | Value |
+|---|---|
+| Background | `#0A0A0A` |
+| Surface | `#111111` |
+| Card | `#171717` |
+| Border | `rgba(255,255,255,0.06)` |
+| Primary Text | `#FFFFFF` |
+| Secondary Text | `#888888` |
+| Success | `#22C55E` |
+| Warning | `#F59E0B` |
+| Danger | `#EF4444` |
+| Gold Accent | `#D4AF37` |
+
+Typography uses **Space Grotesk** for headings and UI labels, **Barlow Condensed** for large numbers and broadcast-style display, and **Inter** for body text.
+
+---
+
+## Folder Structure
 
 ```
-project/
 ├── backend/
-│   ├── server.js                  ← Main entry point
-│   ├── .env                       ← Environment config
+│   ├── server.js                  ← Express + Socket.IO entry point
+│   ├── .env                       ← Environment config (not committed)
+│   ├── .env.example               ← Config template
 │   ├── package.json
 │   ├── models/
 │   │   ├── Participant.js
@@ -49,74 +100,60 @@ project/
 │   │   ├── rounds.js
 │   │   └── scores.js
 │   └── socket/
-│       └── socketHandler.js       ← All real-time logic
+│       └── socketHandler.js       ← All real-time event logic
 └── frontend/
-    ├── participant/
-    │   ├── index.html
-    │   ├── participant.css
-    │   └── participant.js
-    ├── host/
-    │   ├── index.html
-    │   ├── host.css
-    │   └── host.js
-    └── display/
-        ├── index.html
-        ├── display.css
-        └── display.js
+    ├── participant/               ← Contestant screen
+    ├── host/                      ← Host control panel
+    └── display/                   ← Public broadcast display
 ```
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 
 - [Node.js](https://nodejs.org/) v18 or higher
-- A [MongoDB Atlas](https://cloud.mongodb.com) account (free tier works) **or** a local MongoDB installation
+- A [MongoDB Atlas](https://cloud.mongodb.com) account (free M0 tier works) **or** a local MongoDB installation
 
----
-
-### 1. Install Dependencies
+### 1 — Install dependencies
 
 ```bash
 cd backend
 npm install
 ```
 
----
+### 2 — Configure environment
 
-### 2. Configure Environment
+Copy the example config and fill in your values:
+
+```bash
+cp .env.example .env
+```
 
 Edit `backend/.env`:
 
 ```env
 PORT=3000
-MONGO_URI=mongodb+srv://<username>:<password>@<cluster>.mongodb.net/quizbuzzer?retryWrites=true&w=majority&appName=Cluster0
+MONGO_URI=mongodb+srv://<user>:<pass>@<cluster>.mongodb.net/quizbuzzer?retryWrites=true&w=majority&appName=Cluster0
 HOST_SECRET=quiz_host_2024
 ```
 
-| Variable | Description |
-|---|---|
-| `PORT` | Port the server runs on (default: 3000) |
-| `MONGO_URI` | Your MongoDB Atlas or local connection string |
-| `HOST_SECRET` | Password to access the host dashboard |
+**MongoDB Atlas setup:**
+1. Go to [cloud.mongodb.com](https://cloud.mongodb.com) and create a free M0 cluster
+2. Add a database user under **Database Access**
+3. Allow your IP under **Network Access** (use `0.0.0.0/0` for local development)
+4. Click **Connect → Drivers** and copy your connection string
 
-> **MongoDB Atlas Setup:**
-> 1. Go to [cloud.mongodb.com](https://cloud.mongodb.com) → Create a free M0 cluster
-> 2. Add a database user under **Database Access**
-> 3. Allow your IP under **Network Access** (use `0.0.0.0/0` for development)
-> 4. Click **Connect → Drivers** and copy your connection string
-
----
-
-### 3. Start the Server
+### 3 — Start the server
 
 ```bash
 cd backend
 node server.js
 ```
 
-You should see:
+Expected output:
+
 ```
 ✅ MongoDB connected
 🚀 Server running at http://localhost:3000
@@ -127,58 +164,52 @@ You should see:
 
 ---
 
-## 🎮 How to Run a Quiz Event
+## Running an Event
 
-### Step 1 — Open All Screens
-- **Host**: Open `http://localhost:3000/host` → Enter host password
-- **Display**: Open `http://localhost:3000/display` on your projector
-- **Participants**: Each contestant opens `http://localhost:3000/participant` on their device
+**Step 1 — Set up screens**
+- Open `/host` on your control device and log in with the host password
+- Project `/display` onto a screen for the audience
+- Ask participants to open `/participant` on their phones or laptops
 
-### Step 2 — Participants Register
-Each participant enters their **First Name** and **Last Name** and clicks **Join Event**. They'll see a disabled BUZZ button waiting for the round to start.
+**Step 2 — Participants register**
+Each person enters their first and last name and joins the event. Their BUZZ button stays disabled until a round begins.
 
-### Step 3 — Start a Round
-Host clicks **Start Round**. All BUZZ buttons activate instantly across all devices.
+**Step 3 — Start a round**
+Host clicks **Start Round**. All BUZZ buttons activate instantly across every connected device.
 
-### Step 4 — Participants Buzz
-Participants click BUZZ as fast as they can. The server records the exact server-side timestamp and assigns queue positions:
-- 1st to buzz → Position #1 (Current)
-- 2nd to buzz → Position #2 (Next)
-- And so on…
+**Step 4 — Participants buzz**
+The server records exact timestamps and assigns queue positions. First to buzz is first in queue.
 
-### Step 5 — Host Actions
+**Step 5 — Host works through the queue**
 
-| Button | Effect |
+| Action | Effect |
 |---|---|
-| ✅ **Correct** | Ends the round. Host then awards points manually. |
-| ❌ **Wrong** | Removes current participant, promotes next in queue |
-| ⏭️ **Pass** | Moves current participant to end of queue |
-| ⛔ **Eliminate** | Bans participant from buzzing in future rounds |
-| ♻️ **Restore** | Re-activates an eliminated participant |
+| **Correct** | Ends the round. Host awards points manually. |
+| **Wrong** | Removes current from queue, promotes next person. |
+| **Pass** | Moves current to the end of the queue. |
+| **Eliminate** | Bans participant from future rounds. |
+| **Restore** | Re-activates an eliminated participant. |
 
-### Step 6 — Award Points
-In the **Scores** panel:
-- Select a participant from the dropdown
-- Click **+5 / +10 / +20 / +50** or enter a custom amount
-- Use **Undo Last** to reverse the most recent score change
+**Step 6 — Award points**
+Go to the Scores panel. Select a participant, click a quick award button or enter a custom amount. Undo is available for the last score action.
 
-### Step 7 — Repeat
-Click **Start Round** again for the next round. Queue clears automatically; buzz locks reset for all participants.
+**Step 7 — Repeat**
+Start the next round. The queue clears automatically. Buzz locks reset for all participants.
 
 ---
 
-## 🔌 Socket.IO Events Reference
+## Socket Events
 
 ### Client → Server
 
 | Event | Payload | Description |
 |---|---|---|
+| `hostAuth` | `{ secret }` | Authenticate as host |
 | `buzz` | `{ participantId }` | Participant buzzes in |
-| `hostAuth` | `{ secret }` | Host authenticates |
 | `startRound` | — | Start a new round |
 | `endRound` | — | End current round |
 | `resetRound` | — | Clear queue, keep round active |
-| `correctAnswer` | — | Mark current participant correct, end round |
+| `correctAnswer` | — | Mark current participant correct |
 | `wrongAnswer` | — | Remove current from queue |
 | `passParticipant` | — | Move current to end of queue |
 | `awardPoints` | `{ participantId, points, reason }` | Add points |
@@ -186,108 +217,85 @@ Click **Start Round** again for the next round. Queue clears automatically; buzz
 | `eliminateParticipant` | `{ participantId }` | Eliminate a participant |
 | `restoreParticipant` | `{ participantId }` | Restore a participant |
 | `undoLastAction` | — | Undo last score change |
-| `toggleHideScores` | `{ hidden }` | Show/hide scores on display |
+| `toggleHideScores` | `{ hidden }` | Toggle score visibility on display |
 
 ### Server → Clients
 
 | Event | Description |
 |---|---|
-| `roundStarted` | New round has begun |
+| `roundStarted` | A new round has begun |
 | `roundEnded` | Round has finished |
-| `roundReset` | Queue cleared |
-| `queueUpdated` | Queue order changed |
-| `leaderboardUpdated` | Scores changed |
+| `roundReset` | Queue has been cleared |
+| `queueUpdated` | Queue order has changed |
+| `leaderboardUpdated` | Scores have changed |
 | `participantBuzzed` | Someone buzzed in |
-| `participantEliminated` | Participant eliminated |
-| `participantRestored` | Participant restored |
-| `buzzAccepted` | Your buzz was accepted (sent to participant) |
-| `buzzRejected` | Your buzz was rejected (sent to participant) |
+| `participantEliminated` | Participant has been eliminated |
+| `participantRestored` | Participant has been restored |
+| `buzzAccepted` | Buzz confirmed (sent to participant) |
+| `buzzRejected` | Buzz denied (sent to participant) |
 | `scoresVisibilityChanged` | Host toggled show/hide scores |
 
 ---
 
-## 🗄️ Database Collections
-
-| Collection | Description |
-|---|---|
-| `participants` | Registered users with name, points, status |
-| `rounds` | Round history with status and timestamps |
-| `buzzes` | Every buzz event with order and server timestamp |
-| `scorelogs` | Every score change (award/deduct) with reason |
-| `queuelogs` | Every queue action (BUZZED/PASSED/WRONG/CORRECT/REINSERTED) |
-
----
-
-## 🔒 Important Rules (Enforced by Server)
-
-1. **Server timestamps only** — client time is never trusted
-2. **One buzz per round** — double-buzzing is blocked server-side
-3. **Eliminated participants cannot buzz**
-4. **Queue actions never affect scores** — only explicit award/deduct events change points
-5. **Leaderboard only updates when host changes scores**
-6. **Every action is persisted** to MongoDB
-
----
-
-## 🌐 REST API Endpoints
+## REST API
 
 | Method | Endpoint | Description |
 |---|---|---|
 | `POST` | `/api/participants` | Register a new participant |
 | `GET` | `/api/participants` | Get all participants |
-| `GET` | `/api/participants/:id` | Get single participant |
-| `GET` | `/api/rounds/current` | Get current/latest round |
-| `GET` | `/api/scores/leaderboard` | Get full leaderboard |
+| `GET` | `/api/participants/:id` | Get a single participant |
+| `GET` | `/api/rounds/current` | Get the current round |
+| `GET` | `/api/scores/leaderboard` | Get the full leaderboard |
 | `GET` | `/api/scores/logs` | Get recent score logs |
 
 ---
 
-## 🛠️ Development
+## Database Collections
 
-### Run with auto-restart (nodemon)
+| Collection | Purpose |
+|---|---|
+| `participants` | Registered users — name, points, status |
+| `rounds` | Round history with timestamps and status |
+| `buzzes` | Every buzz with server timestamp and order |
+| `scorelogs` | Every score change with reason |
+| `queuelogs` | Every queue action (BUZZED / PASSED / WRONG / CORRECT / REINSERTED) |
+
+---
+
+## System Rules
+
+These are enforced server-side and cannot be bypassed by clients:
+
+1. All timestamps are set on the server — client time is never used
+2. One buzz per participant per round
+3. Eliminated participants cannot buzz
+4. Queue actions (pass, wrong) never modify total scores
+5. Leaderboard only updates when the host explicitly changes points
+6. Every action is persisted to MongoDB
+
+---
+
+## Configuration
+
+| Variable | Description | Default |
+|---|---|---|
+| `PORT` | Server port | `3000` |
+| `MONGO_URI` | MongoDB connection string | — |
+| `HOST_SECRET` | Host dashboard password | `quiz_host_2024` |
+
+---
+
+## Development
+
+Run with auto-restart using nodemon:
 
 ```bash
 cd backend
 npm run dev
 ```
 
-### Change Host Password
-
-Update `HOST_SECRET` in `backend/.env`:
-```env
-HOST_SECRET=your_new_secure_password
-```
-
-### Change Port
-
-Update `PORT` in `backend/.env`:
-```env
-PORT=8080
-```
-
 ---
 
-## 👥 User Types
+## License
 
-### 🎤 Host
-- Login with password
-- Full control: rounds, queue, scores, eliminations
-
-### 🏃 Participant
-- Register with name
-- Buzz during active rounds
-- See their queue position in real-time
-
-### 👀 Audience
-- View live leaderboard on the display screen
-- No controls, no score editing
-
----
-
-## 📝 License
-
-MIT License — free to use and modify for your events.
-
----
-
-> Built with ❤️ for live quiz events. Supports up to **200 simultaneous participants**.
+MIT — free to use and modify for your events.
