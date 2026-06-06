@@ -57,11 +57,33 @@ async function broadcastQueue(io) {
   io.emit('queueUpdated', { queue: state.queue, queueDetails });
 }
 
+// Initialize state from database on startup to prevent desyncs on server restart
+async function initializeServerState() {
+  try {
+    const round = await Round.findOne().sort({ createdAt: -1 });
+    if (round) {
+      state.currentRound = round;
+      if (round.status === 'RUNNING') {
+        const buzzes = await Buzz.find({ roundId: round._id }).sort({ buzzOrder: 1 });
+        state.queue = buzzes.map(b => b.participantId.toString());
+        state.buzzedInRound = new Set(state.queue);
+        state.buzzCounter = buzzes.length;
+        console.log(`[STATE] Recovered running Round ${round.roundNumber} with ${state.queue.length} in queue.`);
+      }
+    }
+  } catch (err) {
+    console.error('[STATE] Error recovering state from DB:', err.message);
+  }
+}
+
 // ─────────────────────────────────────────────
 // Socket Handler
 // ─────────────────────────────────────────────
 function socketHandler(io) {
   const HOST_SECRET = process.env.HOST_SECRET || 'quiz_host_2024';
+
+  // Automatically initialize state from database
+  initializeServerState();
 
   io.on('connection', (socket) => {
     console.log(`[SOCKET] Connected: ${socket.id}`);
@@ -132,6 +154,7 @@ function socketHandler(io) {
         await broadcastQueue(io);
         console.log(`[ROUND] Started: Round ${roundNumber}`);
       } catch (err) {
+        console.error('[ROUND] Start error:', err);
         socket.emit('error', { message: err.message });
       }
     });
@@ -140,15 +163,26 @@ function socketHandler(io) {
     socket.on('endRound', async () => {
       if (!isHost(socket)) return;
       try {
-        if (!state.currentRound) return socket.emit('error', { message: 'No active round.' });
-        await Round.findByIdAndUpdate(state.currentRound._id, {
+        let round = state.currentRound;
+        if (!round || round.status !== 'RUNNING') {
+          // Self-healing database fallback
+          round = await Round.findOne({ status: 'RUNNING' }).sort({ createdAt: -1 });
+          if (!round) return socket.emit('error', { message: 'No active round.' });
+        }
+        await Round.findByIdAndUpdate(round._id, {
           status: 'ENDED',
           endedAt: new Date()
         });
-        state.currentRound.status = 'ENDED';
+        if (state.currentRound && state.currentRound._id.toString() === round._id.toString()) {
+          state.currentRound.status = 'ENDED';
+        } else {
+          state.currentRound = round;
+          state.currentRound.status = 'ENDED';
+        }
         io.emit('roundEnded', { round: state.currentRound });
         console.log(`[ROUND] Ended: Round ${state.currentRound.roundNumber}`);
       } catch (err) {
+        console.error('[ROUND] End error:', err);
         socket.emit('error', { message: err.message });
       }
     });
@@ -157,12 +191,19 @@ function socketHandler(io) {
     socket.on('resetRound', async () => {
       if (!isHost(socket)) return;
       try {
-        if (!state.currentRound) return socket.emit('error', { message: 'No active round.' });
+        let round = state.currentRound;
+        if (!round || round.status !== 'RUNNING') {
+          // Self-healing database fallback
+          round = await Round.findOne({ status: 'RUNNING' }).sort({ createdAt: -1 });
+          if (!round) return socket.emit('error', { message: 'No active round.' });
+          state.currentRound = round;
+        }
         resetRoundState();
         io.emit('roundReset', { round: state.currentRound });
         await broadcastQueue(io);
         console.log(`[ROUND] Reset: Round ${state.currentRound.roundNumber}`);
       } catch (err) {
+        console.error('[ROUND] Reset error:', err);
         socket.emit('error', { message: err.message });
       }
     });
