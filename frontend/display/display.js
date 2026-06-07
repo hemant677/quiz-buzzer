@@ -16,6 +16,33 @@ const leaderboardBody = document.getElementById('leaderboard-body');
 const scoresHiddenNotice = document.getElementById('scores-hidden-notice');
 const tickerContent = document.getElementById('ticker-content');
 
+const catOverlay = document.getElementById('cat-overlay');
+const catImg = document.getElementById('cat-img');
+
+const catImages = [
+  '/public/cat_1.png',
+  '/public/cat_2.jpg',
+  '/public/cat_3.jpg',
+  '/public/cat_4.jpg',
+  '/public/cat_5.png',
+  '/public/cat_6.png',
+  '/public/cat_7.png',
+  '/public/cat_8.jpg'
+];
+let lastCatIndex = -1;
+
+function showRandomCatImage() {
+  if (catImages.length === 0) return;
+  let index;
+  do {
+    index = Math.floor(Math.random() * catImages.length);
+  } while (index === lastCatIndex && catImages.length > 1);
+  lastCatIndex = index;
+  
+  catImg.src = catImages[index];
+  catOverlay.classList.remove('hidden');
+}
+
 // ─── Socket ────────────────────────────────────────────────────
 function initSocket() {
   state.socket = io();
@@ -35,6 +62,7 @@ function initSocket() {
     updateRoundHeader(round);
     setCurrentParticipant(null);
     setTicker(`🚀 Round ${round.roundNumber} has started! Participants are buzzing in…`);
+    catOverlay.classList.add('hidden');
   });
 
   state.socket.on('roundEnded', ({ round }) => {
@@ -45,11 +73,13 @@ function initSocket() {
     }
     setCurrentParticipant(null, 'Round ended');
     setTicker('⏹️ Round has ended. Waiting for next round…');
+    showRandomCatImage();
   });
 
   state.socket.on('roundReset', () => {
     setCurrentParticipant(null, 'Queue reset – buzzing again soon!');
     setTicker('🔄 Round has been reset. Get ready to buzz!');
+    catOverlay.classList.add('hidden');
   });
 
   state.socket.on('queueUpdated', ({ queueDetails }) => {
@@ -85,6 +115,19 @@ function initSocket() {
   state.socket.on('wrongAnswerGiven', () => {
     setTicker('❌ Wrong answer! Next participant is up…');
   });
+
+  state.socket.on('eventCleared', () => {
+    state.currentRound = null;
+    state.queueDetails = { current: null, next: null, remaining: [] };
+    state.leaderboard = [];
+    setCurrentParticipant(null);
+    roundPill.textContent = 'WAITING FOR ROUND';
+    roundStatusBadge.textContent = 'WAITING';
+    roundStatusBadge.className = 'status-badge waiting';
+    renderLeaderboard();
+    catOverlay.classList.add('hidden');
+    setTicker('🔄 The event session was reset by the host.');
+  });
 }
 
 // ─── Load current round on connect ─────────────────────────────
@@ -100,6 +143,13 @@ async function loadCurrentRound() {
     if (round) {
       state.currentRound = round;
       updateRoundHeader(round);
+      if (round.status === 'ENDED') {
+        showRandomCatImage();
+      } else {
+        catOverlay.classList.add('hidden');
+      }
+    } else {
+      catOverlay.classList.add('hidden');
     }
     state.leaderboard = lb;
     renderLeaderboard();

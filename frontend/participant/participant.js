@@ -31,6 +31,40 @@ const countdownOverlay = document.getElementById('countdown-overlay');
 const countdownNumber = document.getElementById('countdown-number');
 const countdownLabel = document.getElementById('countdown-label');
 
+const catOverlay = document.getElementById('cat-overlay');
+const catImg = document.getElementById('cat-img');
+const closeCatBtn = document.getElementById('close-cat-btn');
+
+const catImages = [
+  '/public/cat_1.png',
+  '/public/cat_2.jpg',
+  '/public/cat_3.jpg',
+  '/public/cat_4.jpg',
+  '/public/cat_5.png',
+  '/public/cat_6.png',
+  '/public/cat_7.png',
+  '/public/cat_8.jpg'
+];
+let lastCatIndex = -1;
+
+function showRandomCatImage() {
+  if (catImages.length === 0) return;
+  let index;
+  do {
+    index = Math.floor(Math.random() * catImages.length);
+  } while (index === lastCatIndex && catImages.length > 1);
+  lastCatIndex = index;
+  
+  catImg.src = catImages[index];
+  catOverlay.classList.remove('hidden');
+}
+
+if (closeCatBtn) {
+  closeCatBtn.addEventListener('click', () => {
+    catOverlay.classList.add('hidden');
+  });
+}
+
 let countdownInterval = null;
 
 // ─── Socket Init ────────────────────────────────────────────────
@@ -57,6 +91,7 @@ function initSocket() {
     // Clear any previous countdowns
     if (countdownInterval) clearInterval(countdownInterval);
     countdownOverlay.classList.add('hidden');
+    catOverlay.classList.add('hidden'); // Hide cat overlay on new round
 
     disableBuzz();
     startCountdown(() => {
@@ -108,6 +143,9 @@ function initSocket() {
     buzzRing.classList.remove('active');
     updateRoundBadge('ENDED');
     showNotification('⏹️ Round has ended.', 'warning');
+    
+    // Show cat image overlay when round ends
+    showRandomCatImage();
   });
 
   appState.socket.on('roundReset', () => {
@@ -116,6 +154,7 @@ function initSocket() {
       countdownInterval = null;
     }
     countdownOverlay.classList.add('hidden');
+    catOverlay.classList.add('hidden'); // Hide cat overlay on reset
 
     appState.hasBuzzed = false;
     hidePositionCard();
@@ -193,6 +232,7 @@ function initSocket() {
       countdownInterval = null;
     }
     countdownOverlay.classList.add('hidden');
+    catOverlay.classList.add('hidden'); // Hide cat overlay
 
     appState.participant = null;
     appState.hasBuzzed = false;
