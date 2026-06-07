@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quiz Buzzer System — Premium Real-Time Play</title>
+  <meta name="description" content="A real-time quiz buzzer platform for live trivia, classroom events, and challenges." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Playfair+Display:ital,wght@1,500;1,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/home/home.css" />
+</head>
+<body>
+
+  <!-- Top Navigation -->
+  <header class="navbar">
+    <div class="logo-wrap">
+      <div class="logo-icon">
+        <svg viewBox="0 0 100 100" class="logo-svg">
+          <circle cx="50" cy="50" r="40" stroke="url(#logo-grad)" stroke-width="12" fill="none" />
+          <path d="M 68 68 L 88 88" stroke="url(#logo-grad)" stroke-width="12" stroke-linecap="round" />
+          <defs>
+            <linearGradient id="logo-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#8F75FF" />
+              <stop offset="100%" stop-color="#FF7E95" />
+            </linearGradient>
+          </defs>
+        </svg>
+      </div>
+      <span class="logo-text">QUIZ BUZZER</span>
+    </div>
+    
+    <nav class="nav-links">
+      <a href="/participant" class="nav-item">Join Event</a>
+      <a href="/host" class="nav-item">Host Panel</a>
+      <a href="/display" class="nav-item">Public Standings</a>
+    </nav>
+  </header>
+
+  <!-- Hero Section -->
+  <main class="hero-container">
+    
+    <!-- Left: Content -->
+    <section class="hero-text-block">
+      <div class="badge">⚡ REAL-TIME GAMEPLAY</div>
+      
+      <h1 class="hero-title">
+        Buzz <span class="cursive-amp">&</span> Play.<br>
+        <span class="accent-text">Win Live.</span>
+      </h1>
+      
+      <p class="hero-description">
+        Connect instantly on mobile or desktop to experience ultra-low latency buzzer challenges, live standings updates, and professional broadcast-ready score displays.
+      </p>
+      
+      <div class="cta-buttons">
+        <a href="/participant" class="btn btn-primary">
+          <span>Enter as Participant</span>
+          <svg class="arrow-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+        <a href="/host" class="btn btn-secondary">Host Dashboard</a>
+        <a href="/display" class="btn btn-secondary">Public Display</a>
+      </div>
+    </section>
+
+    <!-- Right: Graphic -->
+    <section class="hero-graphic-block">
+      <div class="graphic-wrap">
+        
+        <!-- Background decorative details -->
+        <div class="deco-circle circle-purple"></div>
+        <div class="deco-circle circle-pink"></div>
+        
+        <!-- Big Arch Frame -->
+        <div class="arch-frame">
+          <img src="/public/hero_cat.png" alt="Quiz Cat" class="arch-image" />
+        </div>
+        
+        <!-- Foreground decorative star/flower -->
+        <div class="deco-star">
+          <svg viewBox="0 0 100 100" class="star-svg">
+            <path d="M50 0 L55 35 L90 20 L65 50 L90 80 L55 65 L50 100 L45 65 L10 80 L35 50 L10 20 L45 35 Z" fill="#FFA069" />
+          </svg>
+        </div>
+        
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <p>&copy; 2026 Quiz Buzzer System. All rights reserved.</p>
+  </footer>
+
+</body>
+</html>

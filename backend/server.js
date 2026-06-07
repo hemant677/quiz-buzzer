@@ -25,6 +25,7 @@ app.use(cors());
 app.use(express.json());
 
 // ─── Serve Frontend Static Files ─────────────
+app.use('/home', express.static(path.join(__dirname, '../frontend/home')));
 app.use('/participant', express.static(path.join(__dirname, '../frontend/participant')));
 app.use('/host', express.static(path.join(__dirname, '../frontend/host')));
 app.use('/display', express.static(path.join(__dirname, '../frontend/display')));
@@ -42,29 +43,7 @@ app.get('/api/config', (req, res) => {
 
 // ─── Root redirect ─────────────────────────
 app.get('/', (req, res) => {
-  res.send(`
-    <!DOCTYPE html>
-    <html>
-    <head><title>Quiz Buzzer System</title>
-    <style>
-      body { font-family: 'Inter', sans-serif; background: #0a0f1e; color: #fff; display:flex; flex-direction:column; align-items:center; justify-content:center; height:100vh; margin:0; }
-      h1 { color: #00d4ff; font-size: 2.5rem; margin-bottom: 1rem; }
-      .links { display: flex; gap: 1.5rem; margin-top: 1rem; }
-      a { background: #00d4ff; color: #0a0f1e; padding: 1rem 2rem; border-radius: 12px; text-decoration: none; font-weight: 700; font-size: 1.1rem; transition: opacity 0.2s; }
-      a:hover { opacity: 0.8; }
-    </style>
-    </head>
-    <body>
-      <h1>🎯 Quiz Buzzer System</h1>
-      <p style="color:#aaa">Select your role to get started</p>
-      <div class="links">
-        <a href="/participant">Participant</a>
-        <a href="/host">Host Dashboard</a>
-        <a href="/display">Public Display</a>
-      </div>
-    </body>
-    </html>
-  `);
+  res.sendFile(path.join(__dirname, '../frontend/home/index.html'));
 });
 
 // ─── Socket.IO ────────────────────────────────
