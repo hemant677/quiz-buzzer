@@ -93,9 +93,42 @@ function initSocket() {
     countdownOverlay.classList.add('hidden');
     catOverlay.classList.add('hidden'); // Hide cat overlay on new round
 
-    enableBuzz();
-    showNotification('🚀 Round ' + round.roundNumber + ' has started! Get ready to BUZZ!', 'success');
+    disableBuzz();
+    startCountdown(() => {
+      enableBuzz();
+      showNotification('🚀 Round ' + round.roundNumber + ' has started! Get ready to BUZZ!', 'success');
+    });
   });
+
+  function startCountdown(callback) {
+    if (countdownInterval) clearInterval(countdownInterval);
+    countdownOverlay.classList.remove('hidden');
+    countdownLabel.textContent = 'GET READY';
+    
+    let count = 3;
+    countdownNumber.textContent = count;
+    
+    // Reset animation
+    countdownNumber.style.animation = 'none';
+    void countdownNumber.offsetWidth; // force reflow
+    countdownNumber.style.animation = 'num-pulse 1s cubic-bezier(0.4, 0, 0.2, 1) infinite';
+
+    countdownInterval = setInterval(() => {
+      count--;
+      if (count > 0) {
+        countdownNumber.textContent = count;
+      } else if (count === 0) {
+        countdownNumber.textContent = 'GO!';
+        countdownLabel.textContent = 'BUZZ NOW!';
+      } else {
+        clearInterval(countdownInterval);
+        countdownInterval = null;
+        countdownOverlay.classList.add('hidden');
+        countdownNumber.style.animation = 'none';
+        if (callback) callback();
+      }
+    }, 1000);
+  }
 
   appState.socket.on('roundEnded', ({ round }) => {
     if (countdownInterval) {
