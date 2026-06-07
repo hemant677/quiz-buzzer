@@ -92,6 +92,18 @@
     <div class="countdown-label" id="countdown-label">GET READY</div>
   </div>
 
+  <!-- CAT IMAGE OVERLAY -->
+  <div id="cat-overlay" class="cat-overlay hidden">
+    <div class="cat-card">
+      <div class="cat-card-header">
+        <span>ROUND ENDED</span>
+        <button id="close-cat-btn" class="close-btn">&times;</button>
+      </div>
+      <img id="cat-img" src="" alt="Meow!" class="cat-image-el" />
+      <p class="cat-caption">🐱 Rest up for the next round! 🐱</p>
+    </div>
+  </div>
+
   <script src="/socket.io/socket.io.js"></script>
   <script src="participant.js"></script>
 </body>
