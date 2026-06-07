@@ -214,12 +214,7 @@ function socketHandler(io) {
         if (!state.currentRound || state.currentRound.status !== 'RUNNING') {
           return socket.emit('buzzRejected', { message: 'Round is not active.' });
         }
-        
-        // Enforce 3-second countdown delay server-side
-        const elapsed = Date.now() - new Date(state.currentRound.startedAt).getTime();
-        if (elapsed < 3000) {
-          return socket.emit('buzzRejected', { message: 'Cannot buzz during the countdown!' });
-        }
+
 
         if (state.buzzedInRound.has(participantId)) {
           return socket.emit('buzzRejected', { message: 'You have already buzzed this round.' });
